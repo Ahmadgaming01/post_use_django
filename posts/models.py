@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -7,22 +8,14 @@ class Post (models.Model):
     content = models.TextField (max_length=10000)
     image = models.ImageField (upload_to= 'postImages')
     date = models.DateTimeField(timezone.now)
-    user = models.ForeignKey ('User' , related_name='Post_User', on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='post_like')
+    user = models.ForeignKey (User , related_name= 'User_Post' , on_delete= models.CASCADE)
     def __str__(self):
         return str(self.user)
 
-class User (models.Model):
-    
-    name = models.CharField (max_length=50)
-    bio = models.CharField (max_length=100)
-    image = models.ImageField(upload_to='Uimages')
-    def __str__(self):
-        return self.name
 
-class Like (models.Model):
-    like = models.IntegerField()
-    user = models.ManyToManyField (Post , related_name= 'Like_Post')
-    
+
+
     def __str__(self):
         return str(self.user)
 class Comment (models.Model):
